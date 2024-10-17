@@ -114,7 +114,7 @@ sudo -u loboguara /opt/loboguara/start.sh
 Access the URL below to register the Lobo Guará Super Admin
 
 ```bash
-https://your_address:7405/admin
+http://your_address:7405/admin
 ```
 
 ![Super admin creation](images/superadmin.png)
