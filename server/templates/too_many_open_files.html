@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Too Many Open Files</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container text-center mt-5">
+        <h1>Too Many Open Files</h1>
+        <p>The server has exceeded the number of allowed open files. Please try again later.</p>
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Go back to home</a>
+    </div>
+</body>
+</html>

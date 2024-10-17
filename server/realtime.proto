@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+service CertStreamService {
+    rpc StreamCertificates (StreamRequest) returns (stream StreamResponse);
+}
+
+message StreamRequest {
+    string request_key = 1; // Para autenticação
+}
+
+message StreamResponse {
+    string certificate_data = 1; // Dados do certificado como JSON
+}

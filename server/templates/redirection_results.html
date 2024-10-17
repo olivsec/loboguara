@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Redirection Results{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-light">Access Details for {{ link.original_url }}</h1>
+    <table class="table table-dark table-striped table-responsive">
+        <thead>
+            <tr>
+                <th style="width: 15%;">Access Time</th>
+                <th style="width: 15%;">IP Address</th>
+                <th style="width: 25%;">User Agent</th>
+                <th style="width: 15%;">Referer</th>
+                <th style="width: 15%;">Geolocation</th>
+                <th style="width: 15%;">Headers</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for access in accesses %}
+            <tr>
+                <td>{{ access.access_time }}</td>
+                <td>{{ access.ip_address }}</td>
+                <td style="word-wrap: break-word;">
+                    <div style="max-height: 100px; overflow-y: auto;">
+                        {{ access.user_agent }}
+                    </div>
+                </td>
+                <td>{{ access.referer or "None" }}</td>
+                <td>
+                    <a href="https://iplocation.io/ip/{{ access.ip_address }}" target="_blank">
+                        Search Geolocation
+                    </a>
+                </td>
+                <td>
+                    <button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#headersModal{{ access.id }}">
+                        View
+                    </button>
+                    
+                    
+                    <div class="modal fade" id="headersModal{{ access.id }}" tabindex="-1" role="dialog" aria-labelledby="headersModalLabel{{ access.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content bg-dark text-light">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="headersModalLabel{{ access.id }}">Headers for IP: {{ access.ip_address }}</h5>
+                                    <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <pre style="white-space: pre-wrap; word-wrap: break-word; color: #f8f9fa;">{{ access.headers }}</pre>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

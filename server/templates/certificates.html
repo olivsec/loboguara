@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}SSL Certificate Search{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <h2 class="text-light">SSL Certificate Search</h2>
+            <form id="search-form" class="form-inline my-2 my-lg-0" method="GET">
+                <input id="search-query" class="form-control mr-sm-2 bg-dark text-light" type="search" placeholder="Search (min. 5 characters)" aria-label="Search" name="query" minlength="5" required>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <small id="query-feedback" class="text-warning" style="display:none;">Please enter more than 4 characters to search.</small>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <div class="card bg-dark text-light">
+                <div class="card-body">
+                    <h3 class="card-title">About this feature</h3>
+                    <p class="card-text" id="search-description">This functionality allows you to identify malicious domains and subdomains. It is possible to identify sites created by cyber criminals such as phishing sites, malware distribution sites, among others.</p>
+                    <p class="card-text" id="search-description">The search field allows the user to search for words that contain more than 4 characters.</p>
+                    <p class="card-text" id="search-description">Unfortunately, we had a problem with our old database. The current database contains certificates issued from September 5, 2024.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loading-spinner" class="spinner-border text-primary mt-4" role="status" style="display: none;">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div id="loading-message" class="text-primary mt-2" style="display: none;">
+        <p>Searching for certificates... Please wait.</p>
+    </div>
+    <div id="certificates-container" class="table-responsive mt-4" style="display: none;">
+        <table id="certificates-table" class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Domain</th>
+                    <th>Certificate Data</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="certificates-body">
+                
+            </tbody>
+        </table>
+    </div>
+    <center><button id="load-more-button" class="btn btn-outline-success btn-block" style="display: none;">Load More</button></center>
+</div>
+
+
+<div class="modal fade" id="dataModal" tabindex="-1" role="dialog" aria-labelledby="dataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="dataModalLabel">Details</h5>
+                <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="jsonData"></div> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let totalRecords = 10;
+    let lastTimestamp = null;
+
+    function showData(domain, index) {
+        var element = document.getElementById('data-' + index);
+
+        
+        if (!element) {
+            console.error('Element with ID data-' + index + ' not found.');
+            return;
+        }
+
+        var jsonData = element.querySelector('.json-data').textContent;
+
+        document.getElementById('jsonData').innerText = jsonData;
+        document.getElementById('dataModalLabel').innerText = 'Certificate Data for ' + domain;
+        $('#dataModal').modal('show');
+    }
+
+    function loadCertificates(query, totalRecords) {
+        if (query.length <= 4) {
+            document.getElementById('query-feedback').style.display = 'block';
+            return;
+        } else {
+            document.getElementById('query-feedback').style.display = 'none';
+        }
+
+        document.getElementById('loading-spinner').style.display = 'block';
+        document.getElementById('loading-message').style.display = 'block';
+
+        
+        fetch(`/sslcertificatesearch?query=${encodeURIComponent(query)}&total_records=${totalRecords}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tbody = document.getElementById('certificates-body');
+                tbody.innerHTML = '';
+                data.forEach((cert, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${cert.domain}</td>
+                        <td><button class="btn btn-info btn-sm" onclick="showData('${cert.domain}', ${index})">Show Data</button></td>
+                        <td>${new Date(cert.timestamp).toLocaleString()}</td>
+                    `;
+                    tbody.appendChild(row);
+
+                    const dataRow = document.createElement('tr');
+                    dataRow.style.display = 'none';
+                    dataRow.id = `data-${index}`;
+                    dataRow.innerHTML = `
+                        <td colspan="3"><pre class="json-data bg-dark text-light">${JSON.stringify(cert.cert_data, null, 2)}</pre></td>
+                    `;
+                    tbody.appendChild(dataRow);
+                });
+
+                if (data.length > 0) {
+                    document.getElementById('load-more-button').style.display = 'block';
+                    lastTimestamp = data[data.length - 1].timestamp;
+                } else {
+                    document.getElementById('load-more-button').style.display = 'none';
+                }
+
+                document.getElementById('certificates-container').style.display = 'block';
+                document.getElementById('loading-spinner').style.display = 'none';
+                document.getElementById('loading-message').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error fetching certificates:', error);
+                document.getElementById('loading-spinner').style.display = 'none';
+                document.getElementById('loading-message').style.display = 'none';
+            });
+    }
+
+    document.getElementById('load-more-button').addEventListener('click', () => {
+        totalRecords += 10;
+        const query = document.getElementById('search-query').value;
+        loadCertificates(query, totalRecords);
+    });
+
+    document.getElementById('search-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        totalRecords = 10;
+        const query = document.getElementById('search-query').value;
+        loadCertificates(query, totalRecords);
+    });
+</script>
+{% endblock %}

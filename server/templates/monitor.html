@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}SSL Certificate Discovery | Lobo Guará{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-light">SSL Certificate Discovery</h2>
+    <div class="card bg-dark text-light">
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('main.add_keyword') }}">
+                {{ keyword_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ keyword_form.keyword.label(class="form-label") }}
+                    {{ keyword_form.keyword(class="form-control bg-dark text-light", placeholder="Enter a keyword") }}
+                </div>
+                <button type="submit" class="btn btn-outline-success btn-block">Add</button>
+            </form>
+        </div>
+    </div>
+    <p></p>
+    <div class="card bg-dark text-light mb-4">
+        <div class="card-body">
+            <h5 class="card-title">About This Feature</h5>
+            <p class="card-text">This feature allows you to identify malicious domains and subdomains targeting your organization's employees and customers in real time by adding your organization's name, along with related product and service names. It automatically detects certificates issued with keywords in the certificate's common name field.</p>
+        </div>
+    </div>
+    
+    {% if keywords %}
+    <div class="mt-4">
+        <h3 class="text-light">Monitored Keywords</h3>
+        <ul class="list-group" id="keyword-list">
+            {% for keyword in keywords %}
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-dark text-light">
+                    {{ keyword.keyword }}
+                    <div class="d-flex align-items-center">
+                        <form method="POST" action="{{ url_for('main.delete_keyword', keyword_id=keyword.id) }}" class="d-flex align-items-center">
+                            {{ delete_form.hidden_tag() }}
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="remove_certificates_{{ keyword.id }}" name="remove_certificates">
+                                <label class="form-check-label" for="remove_certificates_{{ keyword.id }}">
+                                    Also remove associated certificates
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if show_load_more_keywords %}
+        <div class="text-center mt-3">
+            <center><button id="load-more-keywords" class="btn btn-outline-success">Load More Keywords</button></center>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    {% if monitored_certs %}
+    <div class="mt-4">
+        <h3 class="text-light">Discovered SSL Certificates</h3>
+        <ul class="list-group" id="cert-list">
+            {% for cert in monitored_certs %}
+                <li class="list-group-item d-flex justify-content-between align-items-center bg-dark text-light">
+                    {{ cert.domain }}
+                    <form method="POST" action="{{ url_for('main.delete_monitored_certificate', cert_id=cert.id) }}">
+                        {{ delete_form.hidden_tag() }}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+        {% if show_load_more_certs %}
+        <div class="text-center mt-3">
+            <center><button id="load-more-certs" class="btn btn-outline-success">Load More Certificates</button></center>
+        </div>
+        {% endif %}
+    </div>
+    <div id="loading-message" class="text-center text-primary mt-3" style="display: none;">
+        <p>Loading more certificates... Please wait.</p>
+    </div>
+    {% endif %}
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let lastCertId = null;
+        let lastCertTimestamp = null;
+
+        {% if monitored_certs|length > 0 %}
+            lastCertId = {{ monitored_certs[-1].id }};
+            lastCertTimestamp = "{{ monitored_certs[-1].timestamp.isoformat() }}";
+        {% endif %}
+
+        const loadMoreCertsButton = document.getElementById('load-more-certs');
+        if (loadMoreCertsButton) {
+            loadMoreCertsButton.addEventListener('click', function() {
+                loadMoreCertificates();
+            });
+        }
+
+        function loadMoreCertificates() {
+            const loadingMessage = document.getElementById('loading-message');
+            loadingMessage.style.display = 'block';
+            
+            const url = new URL("{{ url_for('main.load_more') }}", window.location.origin);
+            url.searchParams.append('type', 'certificates');
+            if (lastCertId !== null) url.searchParams.append('last_id', lastCertId);
+            if (lastCertTimestamp !== null) url.searchParams.append('last_timestamp', lastCertTimestamp);
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.items && data.items.length > 0) {
+                        appendCertificates(data.items);
+                        lastCertId = data.last_id;
+                        lastCertTimestamp = data.last_timestamp;
+
+                        console.log('Updated lastCertId:', lastCertId);
+                        console.log('Updated lastCertTimestamp:', lastCertTimestamp);
+                    } else {
+                        loadMoreCertsButton.style.display = 'none';
+                    }
+                    loadingMessage.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    loadingMessage.style.display = 'none';
+                });
+        }
+
+        function appendCertificates(certificates) {
+            const list = document.getElementById('cert-list');
+            certificates.forEach(cert => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between align-items-center bg-dark text-light';
+                li.innerHTML = `
+                    ${cert.domain}
+                    <form method="POST" action="/delete_monitored_certificate/${cert.id}">
+                        <input type="hidden" name="csrf_token" value="${cert.csrf_token}">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                `;
+                list.appendChild(li);
+            });
+        }
+    });
+
+</script>
+
+{% endblock %}

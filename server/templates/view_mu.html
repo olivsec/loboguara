@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block title %}Scan/Monitoring Results{% endblock %}
+
+{% block content %}
+<div class="container mt-4 text-light">
+    <h1>
+        {% if scan %}
+            Scan Results for {{ scan.url }}
+        {% elif monitoring %}
+            Monitoring Results for {{ monitoring.url }}
+        {% endif %}
+    </h1>
+
+    <p>Status: <strong>
+        {% if scan %}
+            {{ scan.status }}
+        {% elif monitoring %}
+            {{ monitoring.status }}
+        {% endif %}
+    </strong></p>
+
+    <div class="results-section mt-4">
+        <h2>Identified URLs</h2>
+        <ul class="list-group mb-4">
+            {% if scan %}
+                {% set scan_results = scan.result | safe | json_loads %}
+                {% for url_data in scan_results if url_data.status %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center bg-dark text-light">
+                        <span>{{ url_data.url }}</span>
+                        <span class="badge badge-success badge-pill">Status: {{ url_data.status }}</span>
+                    </li>
+                {% endfor %}
+            {% elif monitoring %}
+                {% set monitoring_results = monitoring.result | safe | json_loads %}
+                {% for url_data in monitoring_results if url_data.status %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center bg-dark text-light">
+                        <span>{{ url_data.url }}</span>
+                        <span class="badge badge-success badge-pill">Status: {{ url_data.status }}</span>
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="details-section">
+        <h2>Details</h2>
+        {% if scan %}
+            {% for url_data in scan_results if url_data.status and url_data.bodyPath %}
+                <div class="card mb-4 bg-dark text-light">
+                    <div class="card-header">
+                        <h3>{{ url_data.url }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Hostname:</strong> {{ url_data.hostname }}</p>
+                        <p><strong>IP Addresses:</strong> {{ url_data.addrs | join(', ') }}</p>
+                        <p><strong>Page Title:</strong> {{ url_data.pageTitle }}</p>
+                        <h4>HTTP Headers</h4>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for header in url_data.headers %}
+                                    <tr>
+                                        <td>{{ header.name }}</td>
+                                        <td>{{ header.value }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        {% elif monitoring %}
+            {% for url_data in monitoring_results if url_data.status and url_data.bodyPath %}
+                <div class="card mb-4 bg-dark text-light">
+                    <div class="card-header">
+                        <h3>{{ url_data.url }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Hostname:</strong> {{ url_data.hostname }}</p>
+                        <p><strong>IP Addresses:</strong> {{ url_data.addrs | join(', ') }}</p>
+                        <p><strong>Page Title:</strong> {{ url_data.pageTitle }}</p>
+                        <h4>HTTP Headers</h4>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for header in url_data.headers %}
+                                    <tr>
+                                        <td>{{ header.name }}</td>
+                                        <td>{{ header.value }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="screenshots-section">
+        <h2>Screenshots</h2>
+        <div class="row">
+            {% if scan %}
+                {% for url_data in scan_results %}
+                    {% if url_data.screenshotPath %}
+                        <div class="col-md-4">
+                            <div class="card mb-4 shadow-sm">
+                                <img src="{{ url_for('serve_urlscan_file', filename=url_data.screenshotPath) }}" class="card-img-top" alt="Screenshot of {{ url_data.url }}">
+                                <div class="card-body">
+                                    <p class="card-text text-dark">{{ url_data.url }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% elif monitoring %}
+                {% for url_data in monitoring_results %}
+                    {% if url_data.screenshotPath %}
+                        <div class="col-md-4">
+                            <div class="card mb-4 shadow-sm">
+                                <img src="{{ url_for('serve_urlscan_file', filename=url_data.screenshotPath) }}" class="card-img-top" alt="Screenshot of {{ url_data.url }}">
+                                <div class="card-body">
+                                    <p class="card-text text-dark">{{ url_data.url }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="html-section">
+        <h2>HTML Report</h2>
+        <button id="mirrorButton" class="btn btn-outline-info mb-4">Mirror</button>
+        <div id="mirrorContent" style="display: none;">
+            {% if scan %}
+                {% for url_data in scan_results if url_data.bodyPath %}
+                    <iframe src="{{ url_for('serve_urlscan_file', filename=url_data.bodyPath) }}" width="100%" height="600px"></iframe>
+                {% else %}
+                    <p>No HTML report available.</p>
+                {% endfor %}
+            {% elif monitoring %}
+                {% for url_data in monitoring_results if url_data.bodyPath %}
+                    <iframe src="{{ url_for('serve_urlscan_file', filename=url_data.bodyPath) }}" width="100%" height="600px"></iframe>
+                {% else %}
+                    <p>No HTML report available.</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .table td, .table th {
+        word-break: break-all;
+    }
+    .table th {
+        white-space: nowrap;
+    }
+</style>
+
+<script>
+    document.getElementById("mirrorButton").addEventListener("click", function() {
+        var mirrorContent = document.getElementById("mirrorContent");
+        if (mirrorContent.style.display === "none") {
+            mirrorContent.style.display = "block";
+        } else {
+            mirrorContent.style.display = "none";
+        }
+    });
+</script>
+{% endblock %}

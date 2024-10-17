@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Web Path Scan{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-light">Web Path Scan</h1>
+    <div class="card bg-dark text-light p-3 mb-4">
+        <form id="scan-form" method="POST" action="{{ url_for('webpathscan.webpathscan') }}">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.url.label(class="form-label") }}
+                {{ form.url(class="form-control bg-dark text-light") }}
+            </div>
+            <div class="form-group">
+                {{ form.wordlist.label(class="form-label") }}
+                {{ form.wordlist(class="form-control bg-dark text-light") }}
+            </div>
+            <div class="form-group form-check">
+                {{ form.alert_enabled() }}
+                {{ form.alert_enabled.label(class="form-check-label2") }}
+            </div>
+            <button type="submit" class="btn btn-outline-success">Start Scan</button>
+        </form>
+        <div id="loading" class="mt-3 d-none">
+            <div class="d-flex align-items-center">
+                <strong>Scanning the web path... Please wait.</strong>
+                <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card bg-dark text-light mb-4">
+        <div class="card-body">
+            <h5 class="card-title">About This Feature</h5>
+            <p class="card-text">Use this scan to discover paths within an application. This feature identifies application URIs, even if the user does not have access permissions.</p>
+            <p class="card-text">Select the "Enable Email Alert" option to be notified when the scan is complete.</p>
+        </div>
+    </div>
+
+    <h2 class="text-light">Your Scans</h2>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Actions
+                    <a href="#" data-toggle="modal" data-target="#passwordRulesModal" class="text-info ml-2"><i class="fa fa-info-circle"></i></a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for scan in scans %}
+            <tr>
+                <td>{{ scan.url }}</td>
+                <td>{{ scan.status }}</td>
+                <td>
+                    {% if scan.status == 'completed' %}
+                        <a href="{{ url_for('webpathscan.view_webpathscan', scan_id=scan.id) }}" class="btn btn-outline-success btn-sm">V R</a>
+                        <form action="{{ url_for('webpathscan.rescan_webpath', scan_id=scan.id) }}" method="post" class="d-inline">
+                            {{ form.hidden_tag() }}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">R</button>
+                        </form>
+                    {% elif scan.status == 'waiting' %}
+                        <form action="{{ url_for('webpathscan.cancel_webpath', scan_id=scan.id) }}" method="post" class="d-inline">
+                            {{ form.hidden_tag() }}
+                            <button type="submit" class="btn btn-outline-warning btn-sm">C</button>
+                        </form>
+                    {% elif scan.status == 'error' %}
+                        <form action="{{ url_for('webpathscan.rescan_webpath', scan_id=scan.id) }}" method="post" class="d-inline">
+                            {{ form.hidden_tag() }}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">R</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+    </div>
+
+    <div class="modal fade" id="passwordRulesModal" tabindex="-1" role="dialog" aria-labelledby="passwordRulesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passwordRulesModalLabel">Description of actions</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-dark table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Action</th>
+                                <th scope="col">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>V R</td>
+                                <td>View Results</td>
+                            </tr>
+                            <tr>
+                                <td>R</td>
+                                <td>Rescan</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>Cancel</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scanForm = document.getElementById('scan-form');
+        const loadingDiv = document.getElementById('loading');
+
+        scanForm.addEventListener('submit', function() {
+            loadingDiv.classList.remove('d-none');
+        });
+    });
+</script>
+{% endblock %}

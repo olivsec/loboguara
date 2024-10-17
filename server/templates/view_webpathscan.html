@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Web Path Scan Results{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Scan Results for {{ scan.url }}</h1>
+    <p>Status: <strong>{{ scan.status }}</strong></p>
+    <p>WAF Detected: <strong>{{ 'Yes' if scan.waf_detected else 'No' }}</strong></p>
+    {% if scan.waf_detected %}
+    <p>WAF Name: <strong>{{ scan.waf_name }}</strong></p>
+    {% endif %}
+
+    <div class="results-section">
+        <h2>Identified URLs</h2>
+        <ul class="list-group mb-4">
+            {% for item in scan_result %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="url-text">{{ item['url'] }}</span>
+                    <span class="badge badge-pill status-{{ item['status_code'] }}">Status: {{ item['status_code'] }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<style>
+    .results-section ul {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .results-section .list-group-item span.url-text {
+        color: white;
+    }
+    .screenshots-section img {
+        max-height: 200px;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "baseauth.html" %}
+
+{% block title %}Register Superadmin | Lobo Guará{% endblock %}
+
+{% block content %}
+<div class="container mt-4 centered-form">
+    <h2 class="text-light">Register Superadmin</h2>
+    <form method="POST" action="{{ url_for('auth.register_superadmin') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control bg-dark text-light") }}
+        </div>
+        <div class="form-group">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control bg-dark text-light") }}
+        </div>
+        <div class="form-group">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control bg-dark text-light") }}
+            <a href="#" data-toggle="modal" data-target="#passwordRulesModal" class="text-info ml-2"><i class="fa fa-info-circle"></i></a>
+        </div>
+        <div class="form-group">
+            {{ form.confirm_password.label(class="form-label") }}
+            {{ form.confirm_password(class="form-control bg-dark text-light") }}
+        </div>
+        <div class="form-group">
+            {{ form.timezone.label(class="form-label") }}
+            {{ form.timezone(class="form-control bg-dark text-light") }}
+        </div>
+        <button type="submit" class="btn btn-outline-success">Register Superadmin</button>
+    </form>
+</div>
+
+
+<div class="modal fade" id="passwordRulesModal" tabindex="-1" role="dialog" aria-labelledby="passwordRulesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="passwordRulesModalLabel">Password Rules</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

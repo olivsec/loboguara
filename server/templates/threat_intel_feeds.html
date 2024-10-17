@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Threat Intelligence Feeds | Lobo Guará{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-light">Threat Intelligence Feeds</h2>
+
+    <form id="search-form" class="form-inline my-4" method="GET" action="{{ url_for('main.threat_intel_feeds') }}">
+        <input class="form-control mr-sm-2 bg-dark text-light" type="search" placeholder="Search feeds..." aria-label="Search" style="margin-top: 14px;" name="query" value="{{ request.args.get('query', '') }}">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="font-weight: bold;">Search</button>
+    </form>
+
+    <div id="loading-spinner" class="spinner-border text-primary" role="status" style="display: none;">
+        <span class="sr-only">Loading...</span>
+    </div>
+
+    {% if feeds %}
+    <div class="row" id="feed-list">
+        {% for feed in feeds %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm bg-dark text-light">
+                <div class="card-body">
+                    <h5 class="card-title">{{ feed.title }}</h5>
+                    <p class="card-text"><strong>Source:</strong> {{ feed.source }}</p>
+                    <p class="card-text">{{ feed.summary }}</p>
+                    <a href="{{ feed.link }}" class="btn btn-outline-success" target="_blank">Read more</a>
+                    <p class="card-text"><small class="text-muted">Published on: {{ feed.published.split('T')[0] }}</small></p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if show_load_more %}
+        <center><button id="load-more-feeds" class="btn btn-outline-success btn-block">Load More Feeds</button></center>
+    {% endif %}
+    {% else %}
+    <div class="alert alert-info mt-4" role="alert">
+        No feeds found.
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    document.getElementById('search-form').addEventListener('submit', function() {
+        document.getElementById('loading-spinner').style.display = 'block';
+    });
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        let lastId = {{ feeds[-1].id if feeds else 'null' }};
+        
+        document.getElementById('load-more-feeds').addEventListener('click', function() {
+            fetch(`{{ url_for('main.load_more') }}?type=feeds&last_id=${lastId}&query={{ request.args.get('query', '') }}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.items.length) {
+                        const list = document.getElementById('feed-list');
+                        data.items.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'col-md-4';
+                            div.innerHTML = `
+                                <div class="card mb-4 shadow-sm bg-dark text-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${item.title}</h5>
+                                        <p class="card-text"><strong>Source:</strong> ${item.source}</p>
+                                        <p class="card-text">${item.summary}</p>
+                                        <a href="${item.link}" class="btn btn-outline-success" target="_blank">Read more</a>
+                                        <p class="card-text"><small class="text-muted">Published on: ${item.published.split('T')[0]}</small></p>
+                                    </div>
+                                </div>
+                            `;
+                            list.appendChild(div);
+                        });
+                        lastId = data.last_id;
+                        if (!data.has_more) {
+                            document.getElementById('load-more-feeds').style.display = 'none';
+                        }
+                    }
+                });
+        });
+    });
+</script>
+{% endblock %}

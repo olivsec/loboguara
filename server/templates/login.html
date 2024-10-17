@@ -1,0 +1,28 @@
+{% extends "baseauth.html" %}
+
+{% block title %}Login | Lobo Guará{% endblock %}
+
+{% block content %}
+<div class="container centered-form">
+    <img id="logo-guara" src="{{ url_for('static', filename='images/logo_guara1.png') }}" alt="Logo" class="centered-logo">
+    <form method="POST" action="{{ url_for('auth.login') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control bg-dark text-light") }}
+        </div>
+        <div class="form-group">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control bg-dark text-light") }}
+        </div>
+        <div class="form-group form-check">
+            {{ form.remember_me(class="form-check-input") }}
+            {{ form.remember_me.label(class="form-check-label") }}
+        </div>
+        <button type="submit" class="btn btn-outline-success">Login</button>
+    </form>
+    <p class="mt-3">
+        <a href="{{ url_for('auth.reset_password') }}" class="text-light">Forgot your password?</a>
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-light">Edit User: {{ user.username }}</h1>
+
+    
+    <div class="card bg-dark text-light mb-4">
+        <div class="card-header">
+            <h3>Update Email</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {{ email_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ email_form.email.label(class="form-control-label text-light") }}
+                    {{ email_form.email(class="form-control bg-dark text-light") }}
+                    {% for error in email_form.email.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ email_form.submit(class="btn btn-outline-success") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="card bg-dark text-light mb-4">
+        <div class="card-header">
+            <h3>Update Password</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {{ password_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ password_form.password.label(class="form-control-label text-light") }}
+                    {{ password_form.password(class="form-control bg-dark text-light") }}
+                    <a href="#" data-toggle="modal" data-target="#passwordRulesModal" class="text-info ml-2"><i class="fa fa-info-circle"></i></a>
+                    {% for error in password_form.password.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ password_form.confirm.label(class="form-control-label text-light") }}
+                    {{ password_form.confirm(class="form-control bg-dark text-light") }}
+                </div>
+                <div class="form-group">
+                    {{ password_form.submit(class="btn btn-outline-success") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="card bg-dark text-light mb-4">
+        <div class="card-header">
+            <h3>Update Timezone</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {{ timezone_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ timezone_form.timezone.label(class="form-control-label text-light") }}
+                    {{ timezone_form.timezone(class="form-control bg-dark text-light") }}
+                    {% for error in timezone_form.timezone.errors %}
+                        <div class="text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ timezone_form.submit_timezone(class="btn btn-outline-success") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    
+    <div class="card bg-dark text-light mb-4">
+        <div class="card-header">
+            <h3>Update Permissions</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="">
+                {{ permission_form.hidden_tag() }}
+                <div class="form-check mb-3">
+                    {{ permission_form.is_admin(class="form-check-input") }}
+                    {{ permission_form.is_admin.label(class="form-check-label text-light") }}
+                </div>
+                <div class="form-check mb-3">
+                    {{ permission_form.is_superadmin(class="form-check-input") }}
+                    {{ permission_form.is_superadmin.label(class="form-check-label text-light") }}
+                </div>
+                <div class="form-group">
+                    {{ permission_form.submit_permissions(class="btn btn-outline-success") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="passwordRulesModal" tabindex="-1" role="dialog" aria-labelledby="passwordRulesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="passwordRulesModalLabel">Password Rules</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div id="wrapper">
+        
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        <img src="{{ url_for('static', filename='images/logo_guara_negativo.png') }}" width="40" height="30" class="d-inline-block align-top" alt="">
+                    </a>
+                </li>
+                
+                <li class="{% if request.path == '/sslcertificatesearch' %}active{% endif %}">
+                    <a href="/sslcertificatesearch">
+                        <i class="material-icons">policy</i>
+                        <span class="menu-text">Certificate Search</span>
+                    </a>
+                </li>
+                <li class="{% if request.path == '/sslcertificatediscovery' %}active{% endif %}">
+                    <a href="/sslcertificatediscovery">
+                        <i class="material-icons">radar</i>
+                        <span class="menu-text">Certificate Discovery</span>
+                    </a>
+                </li>
+                <li class="{% if request.path == '/redirection' %}active{% endif %}">
+                    <a href="/redirection">
+                        <i class="material-icons">airline_stops</i>
+                        <span class="menu-text">Tracking Link</span>
+                    </a>
+                </li>
+                <li class="{% if request.path == '/domainscan' %}active{% endif %}">
+                    <a href="/domainscan">
+                        <i class="material-icons">policy</i>
+                        <span class="menu-text">Domain Scan</span>
+                    </a>
+                </li>
+                <li class="{% if request.path == '/webpathscan' %}active{% endif %}">
+                    <a href="/webpathscan">
+                        <i class="material-icons">account_tree</i>
+                        <span class="menu-text">Web Path Scan</span>
+                    </a>
+                </li>
+                <li class="{% if request.path == '/scan/urlscan' %}active{% endif %}">
+                    <a href="/scan/urlscan">
+                        <i class="material-icons">http</i>
+                        <span class="menu-text">URL Scan</span>
+                    </a>
+                </li>
+                <li class="{% if request.path == '/monitoring/urlmonitoring' %}active{% endif %}">
+                    <a href="/monitoring/urlmonitoring">
+                        <i class="material-icons">monitor_heart</i>
+                        <span class="menu-text">URL Monitoring</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#dataLeakSubmenu" data-toggle="collapse" aria-expanded="{% if 'dataleak' in request.path %}true{% else %}false{% endif %}" class="dropdown-toggle {% if 'dataleak' in request.path %}active{% endif %}">
+                        <i class="material-icons">lock_open</i>
+                        <span class="menu-text">Data Leak</span>
+                    </a>
+                    <ul class="collapse list-unstyled {% if 'dataleak' in request.path %}show{% endif %}" id="dataLeakSubmenu">
+                        <li class="{% if request.path == '/dataleak/dataleakalerts' %}active{% endif %}">
+                            <a href="/dataleak/dataleakalerts">
+                                <i class="material-icons">crisis_alert</i>
+                                <span class="menu-text">Data Leak Alerts</span>
+                            </a>
+                        </li>
+                        <li class="{% if request.path == '/dataleak/urluserpass' %}active{% endif %}">
+                            <a href="/dataleak/urluserpass">
+                                <i class="material-icons">key</i>
+                                <span class="menu-text">URL+User+Pass</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="{% if request.path == '/threatintelfeeds' %}active{% endif %}">
+                    <a href="/threatintelfeeds">
+                        <i class="material-icons">newspaper</i>
+                        <span class="menu-text">Threat Intelligence Feeds</span>
+                    </a>
+                </li>
+                <li class="{% if request.path == '/about' %}active{% endif %}">
+                    <a href="/about">
+                        <i class="material-icons">info</i>
+                        <span class="menu-text">About</span>
+                    </a>
+                </li>
+                <li class="{% if request.path == '/profile' %}active{% endif %}">
+                    <a href="/profile">
+                        <i class="material-icons">manage_accounts</i>
+                        <span class="menu-text">Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://loboguara.olivsec.com.br/docs/" target="_blank">
+                        <i class="material-icons">description</i>
+                        <span class="menu-text">Documentation</span>
+                    </a>
+                </li>
+                {% if current_user.is_authenticated and (current_user.is_admin or current_user.is_superadmin) %}
+                <li>
+                    <a href="#adminSubmenu" data-toggle="collapse" aria-expanded="{% if 'admin' in request.path %}true{% else %}false{% endif %}" class="dropdown-toggle {% if 'admin' in request.path %}active{% endif %}">
+                        <i class="material-icons">admin_panel_settings</i>
+                        <span class="menu-text">Admin</span>
+                    </a>
+                    <ul class="collapse list-unstyled {% if 'admin' in request.path %}show{% endif %}" id="adminSubmenu">
+                        <li class="{% if request.path == url_for('admin.admin_dashboard') %}active{% endif %}">
+                            <a href="{{ url_for('admin.admin_dashboard') }}">
+                                <i class="material-icons">dashboard</i>
+                                <span class="menu-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="{% if request.path == url_for('admin.admin_users') %}active{% endif %}">
+                            <a href="{{ url_for('admin.admin_users') }}">
+                                <i class="material-icons">group</i>
+                                <span class="menu-text">Manage Users</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+                <li>
+                    <p class="error-message">
+                        <center>If you find any errors, please notify us via email: <a href="mailto:loboguara@olivsec.com.br">loboguara@olivsec.com.br</a></center>
+                    </p>
+                </li>
+            </ul>
+        </div>
+        
+
+        
+        <div id="page-content-wrapper">
+
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">  
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            
+            <div class="container-fluid alert-container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="mt-4">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% endwith %}
+            </div>
+
+            <div class="container-fluid">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        
+    </div>
+    
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha256-GLgOQLuTrl+PHTJTsD2OXVW1E0GifteM9C/q3QErz58=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha256-ecWZ3XYM7AwWIaGvSdmipJ2l1F4bN9RXW6zgpeAiZYI=" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>

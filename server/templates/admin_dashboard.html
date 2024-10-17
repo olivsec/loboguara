@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mt-4">Admin Dashboard</h1>
+
+    {% if metrics %}
+        <p class="lead">Last updated: {{ metrics.timestamp }}</p>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h4>SSL Certificate Monitoring</h4>
+                <p>Total Certificates Monitored: <strong>{{ metrics.total_certificates_monitored }}</strong></p>
+            </div>
+            <div class="col-md-6">
+                <h4>Tracking Links</h4>
+                <p>Total Tracking Links Generated: <strong>{{ metrics.total_tracking_links }}</strong></p>
+                <p>Total Link Accesses: <strong>{{ metrics.total_link_accesses }}</strong></p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h4>URL Scans</h4>
+                <p>Total URL Scans: <strong>{{ metrics.total_url_scans }}</strong></p>
+                <p>Public URL Scans: <strong>{{ metrics.public_url_scans }}</strong></p>
+            </div>
+            <div class="col-md-6">
+                <h4>URL Monitoring</h4>
+                <p>Total URLs Monitored: <strong>{{ metrics.total_url_monitorings }}</strong></p>
+                <p>Activated URLs (HTTP 200): <strong>{{ metrics.activated_urls }}</strong></p>
+            </div>
+        </div>
+
+        <h3 class="mt-5">Top Monitored Keywords</h3>
+        <canvas id="keywordsChart" width="400" height="200"></canvas>
+
+        <h3 class="mt-5">Top Scanned Domains</h3>
+        <canvas id="domainsChart" width="400" height="200"></canvas>
+
+        <h3 class="mt-5">Top URIs Found in Web Path Scans</h3>
+        <canvas id="urisChart" width="400" height="200"></canvas>
+    {% else %}
+        <p>No dashboard data available.</p>
+    {% endif %}
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    {% if metrics %}
+    
+    var keywordsCtx = document.getElementById('keywordsChart').getContext('2d');
+    var keywordsChart = new Chart(keywordsCtx, {
+        type: 'bar',
+        data: {
+            labels: [{% for keyword in metrics.top_keywords.keys() %}"{{ keyword }}",{% endfor %}],
+            datasets: [{
+                label: 'Keyword Count',
+                data: [{% for count in metrics.top_keywords.values() %}{{ count }},{% endfor %}],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    var domainsCtx = document.getElementById('domainsChart').getContext('2d');
+    var domainsChart = new Chart(domainsCtx, {
+        type: 'bar',
+        data: {
+            labels: [{% for domain in metrics.top_domains_scanned.keys() %}"{{ domain }}",{% endfor %}],
+            datasets: [{
+                label: 'Domain Scan Count',
+                data: [{% for count in metrics.top_domains_scanned.values() %}{{ count }},{% endfor %}],
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    var urisCtx = document.getElementById('urisChart').getContext('2d');
+    var urisChart = new Chart(urisCtx, {
+        type: 'bar',
+        data: {
+            labels: [{% for uri in metrics.top_uris_found.keys() %}"{{ uri }}",{% endfor %}],
+            datasets: [{
+                label: 'URI Count',
+                data: [{% for count in metrics.top_uris_found.values() %}{{ count }},{% endfor %}],
+                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    {% endif %}
+</script>
+{% endblock %}

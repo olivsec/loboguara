@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 40px auto;
+            max-width: 600px;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #3c4146;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .header img {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            margin: 10px 0 0 0;
+            font-size: 24px;
+            font-weight: normal;
+        }
+        .content {
+            padding: 20px;
+            line-height: 1.6;
+            color: #444;
+        }
+        .content p {
+            margin: 0 0 20px;
+        }
+        .content a {
+            color: #1e7e34;
+            text-decoration: none;
+        }
+        .footer {
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #777;
+            border-top: 1px solid #ddd;
+        }
+        .footer a {
+            color: #3c4146;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="header">
+            <h1>{{ subject }} - Lobo Guará</h1>
+        </div>
+        
+        
+        <div class="content">
+            <p></p>
+            <p>{{ body }}</p>
+            <p></p>
+        </div>
+        
+        
+        <div class="footer">
+            <p>Lobo Guará v1.1</p>
+            <p><a href="https://loboguara.olivsec.com.br/">Visit the Lobo Guará Project</a> | <a href="https://github.com/olivsec/loboguaraproject">GitHub</a> | <a href="mailto:loboguara@olivsec.com.br">Contact</a></p>
+        </div>
+    </div>
+</body>
+</html>

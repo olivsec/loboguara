@@ -1,0 +1,139 @@
+
+body {
+    background-color: #1b1b1b !important; 
+    color: #e0e0e0; 
+    font-family: 'Roboto', sans-serif;
+    margin: 0; 
+}
+
+
+.beta-banner {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    background-color: #d9534f; 
+    color: #fff; 
+    text-align: center;
+    padding: 5px;
+    z-index: 1000; 
+    font-weight: bold;
+    border-bottom: 1px solid #333; 
+}
+
+.beta-banner p {
+    margin: 0;
+}
+
+
+.navbar {
+    background-color: #1b1b1b !important;
+    margin-top: 40px; 
+    z-index: 999; 
+    border-bottom: 1px solid #333; 
+    padding: 0;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #e0e0e0; 
+    padding: 10px 15px;
+    border-radius: 4px; 
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #b0b0b0; 
+    background-color: #333; 
+}
+
+
+.centered-form, .col-md-6 {
+    background-color: #2c2c2c; 
+    padding: 20px;
+    border-radius: 10px; 
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); 
+    margin-top: 20px; 
+    max-width: 500px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    text-align: center; 
+}
+
+.form-group {
+    margin-bottom: 15px; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+}
+
+.form-control {
+    background-color: #1b1b1b !important; 
+    border: 1px solid #333 !important; 
+    color: #e0e0e0 !important; 
+    max-width: calc(50ch + 2rem) !important; 
+    width: 100% !important; 
+    min-width: 200px !important; 
+    margin: 0 auto; 
+}
+
+.form-control:focus {
+    border-color: #d9534f !important; 
+    box-shadow: none !important; 
+}
+
+.form-label, .form-check-label {
+    color: #e0e0e0 !important; 
+    width: calc(50ch + 2rem); 
+    max-width: 100%; 
+    text-align: left; 
+    margin: 0 auto; 
+}
+
+.form-check-input {
+    margin-top: 0.3rem; 
+    margin-right: 10px; 
+}
+
+
+.btn-outline-success {
+    color: #e0e0e0 !important; 
+    border-color: #b0b0b0 !important; 
+    background-color: #2c2c2c !important; 
+}
+
+.btn-outline-success:hover, .btn-outline-success:focus {
+    color: #121212 !important; 
+    background-color: #b0b0b0 !important; 
+    border-color: #b0b0b0 !important; 
+}
+
+.text-light {
+    color: #e0e0e0 !important; 
+}
+
+a.text-info {
+    color: #17a2b8 !important; 
+}
+
+
+.container {
+    padding: 20px;
+    padding-top: 100px; 
+}
+
+.alert-container {
+    margin-top: 20px; 
+}
+
+.alert {
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+
+.centered-logo {
+    max-width: 300px; 
+    margin-bottom: 20px;
+    display: block; 
+    margin-left: auto;
+    margin-right: auto;
+}

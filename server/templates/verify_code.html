@@ -1,0 +1,17 @@
+{% extends "baseauth.html" %}
+
+{% block title %}Verify Your Account | Lobo Guará{% endblock %}
+
+{% block content %}
+<div class="container mt-4 centered-form">
+    <h1 class="text-light">Verify Your Account</h1>
+    <form method="POST" action="{{ url_for('auth.verify_code') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="code" class="form-label text-light">Verification Code</label>
+            <input type="text" class="form-control bg-dark text-light" id="code" name="code" required>
+        </div>
+        <button type="submit" class="btn btn-outline-success">Verify</button>
+    </form>
+</div>
+{% endblock %}

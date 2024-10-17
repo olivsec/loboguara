@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ error_code }} - Error</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container text-center mt-5">
+        <h1>{{ error_code }} - Error</h1>
+        <p>{{ error_message }}</p>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary">Go back to home</a>
+    </div>
+</body>
+</html>

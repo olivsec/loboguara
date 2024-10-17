@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Scan Results{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Scan Results for {{ scan.domain }}</h1>
+    <p>Status: <strong>{{ scan.status }}</strong></p>
+
+    <div class="results-section">
+        <h2>Whois</h2>
+        <div id="whois-container"></div>
+    </div>
+
+    <div class="results-section">
+        <h2>Subdomain List</h2>
+        <ul id="subdomain-list" class="list-group mb-4"></ul>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        const whoisData = {{ scan.whois_result | tojson }};
+        const whoisContainer = document.getElementById('whois-container');
+
+        const whoisTable = document.createElement('table');
+        whoisTable.className = 'table table-dark table-striped';
+
+        for (const [key, value] of Object.entries(whoisData)) {
+            const row = document.createElement('tr');
+
+            const keyCell = document.createElement('td');
+            keyCell.textContent = key;
+            keyCell.style.fontWeight = 'bold';
+
+            const valueCell = document.createElement('td');
+            valueCell.textContent = Array.isArray(value) ? value.join(', ') : value;
+
+            row.appendChild(keyCell);
+            row.appendChild(valueCell);
+            whoisTable.appendChild(row);
+        }
+
+        whoisContainer.appendChild(whoisTable);
+
+        
+        let subdomainsData = {{ scan.subdomains | tojson }};
+        if (typeof subdomainsData === 'string') {
+            subdomainsData = JSON.parse(subdomainsData);
+        }
+        const subdomainList = document.getElementById('subdomain-list');
+
+        subdomainsData.forEach(subdomain => {
+            const listItem = document.createElement('li');
+            listItem.className = 'list-group-item bg-dark text-light';
+            listItem.textContent = subdomain;
+            subdomainList.appendChild(listItem);
+        });
+    });
+</script>
+
+{% endblock %}

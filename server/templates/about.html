@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}About the Project | Lobo Guará{% endblock %}
+
+{% block content %}
+<div class="container mt-4 about-container text-light">
+    <div class="card bg-dark text-light mb-4">
+        <div class="card-body">
+            <h2>About the Project</h2>
+            <p>Welcome to our Cyber Threat Intelligence (CTI) community support project! Our mission is to empower cybersecurity professionals and enthusiasts with useful tools and information to increase their threat detection and prevention capabilities.</p>
+            <p>Our project offers a variety of CTI services designed to support your cybersecurity efforts:</p>
+            <ul>
+                <li><strong>Threat Intelligence Feeds:</strong> Stay up to date with the latest threat intelligence feeds to proactively defend against emerging threats.</li>
+                <li><strong>Certificate Search:</strong> Perform detailed searches against a database of certificates registered with certification authorities.</li>
+                <li><strong>Newly Registered Certificate Monitoring:</strong> Monitor newly registered certificates to immediately identify and mitigate potential threats.</li>
+                <li><strong>Data Leak Alerts:</strong> Receive real-time alerts about new data breaches to protect sensitive information and take immediate action.</li>
+                <li><strong>Data Leak Information Search:</strong> Search for leaked credentials available on hacker forums to uncover potential risks and vulnerabilities.</li>
+            </ul>
+            <p>We are committed to providing valuable CTI capabilities to the cybersecurity community to improve collective defense mechanisms against cyber threats.</p>
+
+            <h2>OpenCTI Connector</h2>
+            <p>Currently, the project provides a connector for OpenCTI that allows importing monitored certificate domains into the OpenCTI platform as observables.</p>    
+            <ul class="list-unstyled">
+                <li><strong>Github:</strong> <a href="https://github.com/olivsec/opencti-connectors/tree/main/lobo-guara" target="_blank" class="text-success">Lobo Guará Connector</a></li>
+            </ul>
+
+            <h2>Lobo Guará API</h2> 
+            <ul class="list-unstyled">
+                <li><strong>Lobo Guará Project API Documentation:</strong> <a href="/docs/api.html" target="_blank" class="text-success">Documentation</a></li>
+            </ul>
+
+            <h3>Contact</h3>
+            <ul class="list-unstyled">
+                <li><strong>Email:</strong> <a href="mailto:loboguara@olivsec.com.br" class="text-success">loboguara@olivsec.com.br</a></li>
+                <li><strong>Lobo Guará Project Maintainer:</strong> <a href="https://www.linkedin.com/in/jonathan-cybersec" target="_blank" class="text-success">Jonathan Machado</a></li>
+            </ul>
+            
+            <h3>Social Media</h3>
+            <ul class="list-unstyled">
+                <li><a href="https://x.com/loboguaraproj" target="_blank" class="text-success">X (Twitter)</a></li>
+                <li><a href="https://www.linkedin.com/company/lobo-guara-project" target="_blank" class="text-success">LinkedIn</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

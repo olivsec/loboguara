@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Register | Lobo Guará{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark text-light">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Create a New User</h2>
+                    <form method="POST" action="{{ url_for('admin.create_user') }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-group mb-3">
+                            {{ form.username.label(class="form-label") }}
+                            {{ form.username(class="form-control bg-secondary text-light") }}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control bg-secondary text-light") }}
+                        </div>
+
+                        <div class="form-group mb-3 position-relative">
+                            {{ form.password.label(class="form-label") }}
+                            {{ form.password(class="form-control bg-secondary text-light") }}
+                            <a href="#" data-toggle="modal" data-target="#passwordRulesModal" class="text-info position-absolute" style="right: 10px; top: 35px;"><i class="fa fa-info-circle"></i></a>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.confirm_password.label(class="form-label") }}
+                            {{ form.confirm_password(class="form-control bg-secondary text-light") }}
+                        </div>
+
+                        <div class="form-group mb-3">
+                            {{ form.timezone.label(class="form-label") }}
+                            {{ form.timezone(class="form-control bg-secondary text-light") }}
+                        </div>
+
+                        <div class="form-check mb-3">
+                            {{ form.is_admin(class="form-check-input") }}
+                            {{ form.is_admin.label(class="form-check-label") }}
+                        </div>
+
+                        <div class="form-check mb-4">
+                            {{ form.is_superadmin(class="form-check-input") }}
+                            {{ form.is_superadmin.label(class="form-check-label") }}
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-user-plus"></i> Register
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="passwordRulesModal" tabindex="-1" role="dialog" aria-labelledby="passwordRulesModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="passwordRulesModalLabel">Password Rules</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Password must be at least 8 characters long.</li>
+                    <li>Must contain at least one uppercase letter.</li>
+                    <li>Must contain at least one lowercase letter.</li>
+                    <li>Must contain at least one number.</li>
+                    <li>Must contain at least one special character (e.g., !@#$%^&*).</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

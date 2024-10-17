@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block title %}URL Monitoring{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-light">URL Monitoring</h1>
+
+    <div class="card bg-dark text-light p-3 mb-4">
+        <form id="monitor-form" method="POST" action="{{ url_for('urlmonitoring.url_monitoring') }}">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.url.label(class="form-label") }}
+                {{ form.url(class="form-control bg-dark text-light") }}
+                {% if form.url.errors %}
+                    <div class="text-danger">
+                        {% for error in form.url.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.scan_interval.label(class="form-label") }}
+            </div>
+            <button type="submit" class="btn btn-outline-success">Start Monitoring</button>
+        </form>
+    </div>
+
+    <div class="card bg-dark text-light mb-4">
+        <div class="card-body">
+            <h5 class="card-title">About This Feature</h5>
+            <p class="card-text">The URL Monitoring feature allows you to automatically monitor URLs over time. If the URL becomes available, the system will perform a scan and notify you of the results.</p>
+            
+        </div>
+    </div>
+
+    <h2 class="text-light">Your Monitored URLs</h2>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Last Checked</th>
+                <th>Actions
+                    <a href="#" data-toggle="modal" data-target="#actionDescriptionModal" class="text-info ml-2"><i class="fa fa-info-circle"></i></a>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="monitorings">
+            {% for monitoring in monitorings %}
+            <tr id="monitoring-{{ monitoring.id }}">
+                <td>{{ monitoring.url }}</td>
+                <td>{{ monitoring.status }}</td>
+                <td>{{ monitoring.last_checked|to_user_timezone(current_user.timezone) }}</td>
+                <td>
+                    {% if monitoring.status == 'completed' %}
+                        <a href="{{ url_for('urlscan.view_urlscan', scan_id=monitoring.scan_id) }}" class="btn btn-outline-success btn-sm">V S R</a>
+                        <form action="{{ url_for('urlmonitoring.monitor_again', monitoring_id=monitoring.id) }}" method="post" class="d-inline">
+                            {{ form.hidden_tag() }}
+                            <button type="submit" class="btn btn-outline-info btn-sm">M A</button>
+                        </form>
+                        {% if monitoring.scan and monitoring.scan.is_public %}
+                        <button class="btn btn-outline-info btn-sm copy-link-btn" data-link="{{ url_for('urlscan.public_view_urlscan', scan_id=monitoring.scan_id, _external=True) }}">C P L</button>
+                        <form action="{{ url_for('urlscan.remove_public', scan_id=monitoring.scan_id) }}" method="post" class="d-inline">
+                            {{ form.hidden_tag() }}
+                            <button type="submit" class="btn btn-outline-warning btn-sm">R P A R</button>
+                        </form>
+                    {% else %}
+                        {% if monitoring.scan %}
+                            <form action="{{ url_for('urlscan.make_public', scan_id=monitoring.scan_id) }}" method="post" class="d-inline">
+                                {{ form.hidden_tag() }}
+                                <button type="submit" class="btn btn-outline-info btn-sm">G P A R</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                    {% elif monitoring.status == 'in monitoring' %}
+                        <form action="{{ url_for('urlmonitoring.cancel_monitoring', monitoring_id=monitoring.id) }}" method="post" class="d-inline">
+                            {{ form.hidden_tag() }}
+                            <button type="submit" class="btn btn-outline-warning btn-sm">C</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="modal fade" id="actionDescriptionModal" tabindex="-1" role="dialog" aria-labelledby="actionDescriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content bg-dark text-light">
+            <div class="modal-header">
+                <h5 class="modal-title" id="actionDescriptionModalLabel">Description of Actions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>V S R</td>
+                            <td>View Scan Results</td>
+                        </tr>
+                        <tr>
+                            <td>M A</td>
+                            <td>Monitor Again</td>
+                        </tr>
+                        <tr>
+                            <td>G P A R</td>
+                            <td>Grant Public Access to Result</td>
+                        </tr>
+                        <tr>
+                            <td>R P A R</td>
+                            <td>Revoke Public Access to Result</td>
+                        </tr>
+                        <tr>
+                            <td>C</td>
+                            <td>Cancel Monitoring</td>
+                        </tr>
+                        <tr>
+                            <td>C P L</td>
+                            <td>Copy Public Link</td>
+                        </tr> 
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        
+        document.querySelectorAll('.copy-link-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const link = this.getAttribute('data-link');
+                
+                
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(link).then(() => {
+                        this.textContent = 'Copied!';
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+                } else {
+                    
+                    const tempInput = document.createElement('input');
+                    tempInput.value = link;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    try {
+                        document.execCommand('copy');
+                        this.textContent = 'Copied!';
+                    } catch (err) {
+                        console.error('Failed to copy using execCommand: ', err);
+                    }
+                    document.body.removeChild(tempInput);
+                }
+            });
+        });
+</script>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Data Leak Alerts | Lobo Guará{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-light text-center">Data Leak Alerts</h2>
+
+    <form id="search-form" class="form-inline my-4" method="GET" action="{{ url_for('main.data_leaks') }}">
+        <input class="form-control mr-sm-2 bg-dark text-light" type="search" placeholder="Search alerts..." aria-label="Search" style="margin-top: 14px;" name="query" value="{{ request.args.get('query', '') }}">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="font-weight: bold;text-align: left;">Search</button>
+    </form>
+
+    <div id="loading-spinner" class="spinner-border text-primary" role="status" style="display: none;">
+        <span class="sr-only">Loading...</span>
+    </div>
+
+    {% if alerts %}
+    <div class="row" id="alert-list">
+        {% for alert in alerts %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm bg-dark text-light">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Alert ID: {{ alert.id }}</h5>
+                    <ul class="list-unstyled">
+                        {% for key, value in alert.content.items() %}
+                        <li><strong>{{ key.capitalize() }}:</strong> {{ value }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p class="card-text"><small class="text-muted">Added on: {{ alert.timestamp.split('T')[0] }}</small></p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if show_load_more %}
+    <center><button id="load-more-alerts" class="btn btn-outline-success btn-block">Load More Alerts</button></center>
+    {% endif %}
+    {% else %}
+    <div class="alert alert-info mt-4" role="alert">
+        No alerts found.
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    document.getElementById('search-form').addEventListener('submit', function() {
+        document.getElementById('loading-spinner').style.display = 'block';
+    });
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        let lastId = {{ alerts[-1].id if alerts else 'null' }};
+        
+        document.getElementById('load-more-alerts').addEventListener('click', function() {
+            fetch(`{{ url_for('main.load_more') }}?type=alerts&last_id=${lastId}&query={{ request.args.get('query', '') }}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.items.length) {
+                        const list = document.getElementById('alert-list');
+                        data.items.forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'col-md-4';
+                            div.innerHTML = `
+                                <div class="card mb-4 shadow-sm bg-dark text-light">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-success">Alert ID: ${item.id}</h5>
+                                        <ul class="list-unstyled">
+                                            ${Object.entries(item.content).map(([key, value]) => {
+                                                const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+                                                return `<li><strong>${capitalizedKey}:</strong> ${value}</li>`;
+                                            }).join('')}
+                                        </ul>
+                                        <p class="card-text"><small class="text-muted">Added on: ${item.timestamp.split('T')[0]}</small></p>
+                                    </div>
+                                </div>
+                            `;
+                            list.appendChild(div);
+                        });
+                        lastId = data.last_id;
+                        if (!data.has_more) {
+                            document.getElementById('load-more-alerts').style.display = 'none';
+                        }
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    });
+</script>
+{% endblock %}

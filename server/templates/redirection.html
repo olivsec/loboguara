@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Redirection Links{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-light">Tracking Link</h1>
+    <div class="card bg-dark text-light p-3 mb-4">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.original_url.label(class="form-label") }}
+                {{ form.original_url(class="form-control bg-dark text-light") }}
+            </div>
+            <div class="form-group">
+                {{ form.domain.label(class="form-label") }}
+                {{ form.domain(class="form-control bg-dark text-light") }}
+            </div>
+            <button type="submit" class="btn btn-outline-success">Generate Tracking Link</button>
+        </form>
+    </div>
+
+    <h2 class="text-light">Your Generated Links</h2>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Original URL</th>
+                <th>Generated URL</th>
+                <th>Expires In</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for link in links %}
+            <tr>
+                <td>{{ link.original_url }}</td>
+                <td>{{ link.generated_url }}</td>
+                <td>{{ link.expiration_time - datetime.utcnow() }}</td>
+                <td>
+                    <a href="{{ url_for('redirection.view_results', link_id=link.id) }}" class="btn btn-outline-success btn-sm">View Results</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
