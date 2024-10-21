@@ -96,7 +96,6 @@ wafw00f==2.2.0
 websocket-client==1.8.0
 websockets==13.1
 Werkzeug==3.0.4
-wfuzz==3.1.0
 wrapt==1.16.0
 wsproto==1.2.0
 WTForms==3.1.2
