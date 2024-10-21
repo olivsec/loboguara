@@ -60,12 +60,12 @@ sudo mkdir -p "$INSTALL_DIR" || error_exit "Failed to create directory $INSTALL_
 sudo cp -R server/* "$INSTALL_DIR" || error_exit "Failed to copy files to $INSTALL_DIR!"
 
 echo "Creating virtual environment..."
-python3 -m venv "$INSTALL_DIR/venv" || error_exit "Failed to create virtual environment!"
+python3.12 -m venv "$INSTALL_DIR/venv" || error_exit "Failed to create virtual environment!"
 source "$INSTALL_DIR/venv/bin/activate"
 pip install -r "$INSTALL_DIR/requirements.txt" || error_exit "Failed to install dependencies!"
 
 echo "Compiling realtime.proto..."
-python -m grpc_tools.protoc -I"$INSTALL_DIR" --python_out="$INSTALL_DIR" --grpc_python_out="$INSTALL_DIR" "$INSTALL_DIR/realtime.proto" || error_exit "Failed to compile realtime.proto!"
+python3.12 -m grpc_tools.protoc -I"$INSTALL_DIR" --python_out="$INSTALL_DIR" --grpc_python_out="$INSTALL_DIR" "$INSTALL_DIR/realtime.proto" || error_exit "Failed to compile realtime.proto!"
 
 export FLASK_APP="$INSTALL_DIR/run.py"
 
