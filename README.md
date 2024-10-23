@@ -37,7 +37,11 @@ Centralizes intelligence news from various channels, keeping users updated on th
 
 ## Installation
 
-The complete installation documentation for Ubuntu 24.04 is available [here](https://loboguara.olivsec.com.br/docs/loboguara_ubuntu_installation_guide.html).
+The application installation has been approved on Ubuntu 24.04 Server and Red Hat 9.4 distributions, the links for which are below:
+
+[Lobo Guará Implementation on Ubuntu 24.04](https://loboguara.olivsec.com.br/docs/lobo_guara_installation_manual_on_Ubuntu_24-04.html)
+
+[Lobo Guará Implementation on Red Hat 9.4](https://loboguara.olivsec.com.br/docs/lobo_guara_installation_manual_on_RedHat_9-4.html)
 
 ### Dependencies
 
