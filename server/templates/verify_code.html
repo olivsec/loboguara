@@ -8,7 +8,7 @@
     <form method="POST" action="{{ url_for('auth.verify_code') }}">
         {{ form.hidden_tag() }}
         <div class="form-group">
-            <label for="code" class="form-label text-light">Verification Code</label>
+            <label for="code" class="form-label text-light">Enter the verification code from your email:</label>
             <input type="text" class="form-control bg-dark text-light" id="code" name="code" required>
         </div>
         <button type="submit" class="btn btn-outline-success">Verify</button>
