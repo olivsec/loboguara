@@ -7,6 +7,10 @@ class Config:
     SQLALCHEMY_DATABASE_URI = 'postgresql://guarauser:YOUR_PASSWORD_HERE@localhost/guaradb?sslmode=disable'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # 2FA Configuration
+    TWO_FACTOR_ENABLED = False  # Options: 'True' or 'False'
+    TWO_FACTOR_METHOD = 'totp'  # Options: 'email' or 'totp'
+    
     # Email settings - Required for two-factor authentication (2FA) via email and notifications sent by the featur>
     MAIL_SERVER = 'smtp.exemple.com'
     MAIL_PORT = 587
