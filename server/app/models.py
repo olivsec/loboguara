@@ -25,6 +25,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(150), nullable=False, unique=True)
     email = db.Column(db.String(150), nullable=False, unique=True)
     password = db.Column(db.String(150), nullable=False)
+    totp_secret = db.Column(db.String(64), nullable=True)
     reset_token = db.Column(db.String(100), nullable=True)
     reset_token_expiration = db.Column(db.DateTime, nullable=True)
     verification_code = db.Column(db.String(6), nullable=True)
