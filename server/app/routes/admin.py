@@ -153,3 +153,24 @@ def delete_user(user_id):
             logger.error(f"Error deleting user {user.username}: {e}")
             flash('Error deleting user. Please try again.', 'danger')
     return redirect(url_for('admin.admin_users'))
+
+
+@bp.route('/admin/users/<int:user_id>/reset_totp', methods=['POST'])
+@login_required
+@admin_required
+def reset_totp(user_id):
+    user = User.query.get_or_404(user_id)
+    
+    if not user.totp_secret:
+        flash('TOTP is not enabled for this user.', 'info')
+        return redirect(url_for('admin.edit_user', user_id=user_id))
+
+    user.totp_secret = None
+    try:
+        db.session.commit()
+        flash('TOTP has been reset successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Error resetting TOTP. Please try again.', 'danger')
+
+    return redirect(url_for('admin.edit_user', user_id=user_id))
