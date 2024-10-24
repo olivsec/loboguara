@@ -1,0 +1,23 @@
+{% extends "baseauth.html" %}
+
+{% block title %}Configure TOTP | Lobo Guará{% endblock %}
+
+{% block content %}
+<div class="container centered-form">
+    <h1 class="text-light">Configure Two-Factor Authentication (TOTP)</h1>
+    <p class="text-light">Scan the QR code below using your Google Authenticator or Microsoft Authenticator app and enter the code to complete the setup.</p>
+
+    <div class="text-center">
+        <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" style="width: 200px; height: 200px;">
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.enable_totp') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="totp_code" class="form-label text-light">Enter the code from your app:</label>
+            {{ form.code(class="form-control bg-dark text-light") }}
+        </div>
+        <button type="submit" class="btn btn-outline-success">Verify</button>
+    </form>
+</div>
+{% endblock %}
