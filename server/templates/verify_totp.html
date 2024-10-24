@@ -1,0 +1,17 @@
+{% extends "baseauth.html" %}
+
+{% block title %}Verify Your TOTP | Lobo Guará{% endblock %}
+
+{% block content %}
+<div class="container centered-form">
+    <h1 class="text-light">Enter Your TOTP Code</h1>
+    <form method="POST" action="{{ url_for('auth.verify_totp') }}">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label for="code" class="form-label text-light">TOTP Code</label>
+            {{ form.code(class="form-control bg-dark text-light") }}
+        </div>
+        <button type="submit" class="btn btn-outline-success">Verify</button>
+    </form>
+</div>
+{% endblock %}
