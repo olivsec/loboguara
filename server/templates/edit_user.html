@@ -99,6 +99,18 @@
             </form>
         </div>
     </div>
+
+    <div class="card bg-dark text-light mb-4">
+        <div class="card-header">
+            <h3>Reset TOTP</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('admin.reset_totp', user_id=user.id) }}">
+                {{ permission_form.hidden_tag() }}
+                <button type="submit" class="btn btn-outline-danger">Reset TOTP</button>
+            </form>
+        </div>
+    </div>
 </div>
 
 
@@ -120,4 +132,6 @@
         </div>
     </div>
 </div>
+
+
 {% endblock %}
