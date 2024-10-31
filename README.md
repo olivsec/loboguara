@@ -43,6 +43,14 @@ The application installation has been approved on Ubuntu 24.04 Server and Red Ha
 
 [Lobo Guará Implementation on Red Hat 9.4](https://loboguara.olivsec.com.br/docs/lobo_guara_installation_manual_on_RedHat_9-4.html)
 
+There is a Dockerfile and a docker-compose version of Lobo Guará too. Just clone the repo and do:
+
+```
+docker compose up
+```
+
+Then, go to your web browser at localhost:7405.
+
 ### Dependencies
 
 Before proceeding with the installation, ensure the following dependencies are installed:
