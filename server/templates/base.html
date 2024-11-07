@@ -12,7 +12,7 @@
 </head>
 <body>
     <div id="wrapper">
-        
+
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
@@ -20,110 +20,136 @@
                         <img src="{{ url_for('static', filename='images/logo_guara_negativo.png') }}" width="40" height="30" class="d-inline-block align-top" alt="">
                     </a>
                 </li>
-                
-                <li class="{% if request.path == '/sslcertificatesearch' %}active{% endif %}">
+
+                <li>
                     <a href="/sslcertificatesearch">
-                        <i class="material-icons">policy</i>
+                        <i class="material-icons notranslate">policy</i>
                         <span class="menu-text">Certificate Search</span>
                     </a>
                 </li>
-                <li class="{% if request.path == '/sslcertificatediscovery' %}active{% endif %}">
+                <li>
                     <a href="/sslcertificatediscovery">
-                        <i class="material-icons">radar</i>
+                        <i class="material-icons notranslate">radar</i>
                         <span class="menu-text">Certificate Discovery</span>
                     </a>
                 </li>
-                <li class="{% if request.path == '/redirection' %}active{% endif %}">
+                <li>
                     <a href="/redirection">
-                        <i class="material-icons">airline_stops</i>
+                        <i class="material-icons notranslate">airline_stops</i>
                         <span class="menu-text">Tracking Link</span>
                     </a>
                 </li>
-                <li class="{% if request.path == '/domainscan' %}active{% endif %}">
+                <li>
                     <a href="/domainscan">
-                        <i class="material-icons">policy</i>
+                        <i class="material-icons notranslate">policy</i>
                         <span class="menu-text">Domain Scan</span>
                     </a>
                 </li>
-                <li class="{% if request.path == '/webpathscan' %}active{% endif %}">
+                <li>
                     <a href="/webpathscan">
-                        <i class="material-icons">account_tree</i>
+                        <i class="material-icons notranslate">account_tree</i>
                         <span class="menu-text">Web Path Scan</span>
                     </a>
                 </li>
-                <li class="{% if request.path == '/scan/urlscan' %}active{% endif %}">
-                    <a href="/scan/urlscan">
-                        <i class="material-icons">http</i>
-                        <span class="menu-text">URL Scan</span>
-                    </a>
+                <li>
+                <a href="/scan/urlscan">
+                    <i class="material-icons notranslate">http</i>
+                    <span class="menu-text">URL Scan</span>
+                </a>
                 </li>
-                <li class="{% if request.path == '/monitoring/urlmonitoring' %}active{% endif %}">
+                <li>
                     <a href="/monitoring/urlmonitoring">
-                        <i class="material-icons">monitor_heart</i>
+                        <i class="material-icons notranslate">monitor_heart</i>
                         <span class="menu-text">URL Monitoring</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#dataLeakSubmenu" data-toggle="collapse" aria-expanded="{% if 'dataleak' in request.path %}true{% else %}false{% endif %}" class="dropdown-toggle {% if 'dataleak' in request.path %}active{% endif %}">
-                        <i class="material-icons">lock_open</i>
+                    <a href="#dataLeakSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="material-icons notranslate">lock_open</i>
                         <span class="menu-text">Data Leak</span>
                     </a>
-                    <ul class="collapse list-unstyled {% if 'dataleak' in request.path %}show{% endif %}" id="dataLeakSubmenu">
-                        <li class="{% if request.path == '/dataleak/dataleakalerts' %}active{% endif %}">
+                    <ul class="collapse list-unstyled" id="dataLeakSubmenu">
+                        <li>
                             <a href="/dataleak/dataleakalerts">
-                                <i class="material-icons">crisis_alert</i>
+                                <i class="material-icons notranslate">crisis_alert</i>
                                 <span class="menu-text">Data Leak Alerts</span>
                             </a>
                         </li>
-                        <li class="{% if request.path == '/dataleak/urluserpass' %}active{% endif %}">
+                        <li>
                             <a href="/dataleak/urluserpass">
-                                <i class="material-icons">key</i>
+                                <i class="material-icons notranslate">key</i>
                                 <span class="menu-text">URL+User+Pass</span>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="{% if request.path == '/threatintelfeeds' %}active{% endif %}">
+                <li>
                     <a href="/threatintelfeeds">
-                        <i class="material-icons">newspaper</i>
+                        <i class="material-icons notranslate">newspaper</i>
                         <span class="menu-text">Threat Intelligence Feeds</span>
                     </a>
                 </li>
-                <li class="{% if request.path == '/about' %}active{% endif %}">
+
+                <li>
+                    <a href="{{ url_for('api.generate_api_token') }}">
+                        <i class="material-icons notranslate">vpn_key</i>
+                        <span class="menu-text">API Token</span>
+                    </a>
+                </li>
+
+                <li>
                     <a href="/about">
-                        <i class="material-icons">info</i>
+                        <i class="material-icons notranslate">info</i>
                         <span class="menu-text">About</span>
                     </a>
                 </li>
-                <li class="{% if request.path == '/profile' %}active{% endif %}">
+                <li>
                     <a href="/profile">
-                        <i class="material-icons">manage_accounts</i>
+                        <i class="material-icons notranslate">manage_accounts</i>
                         <span class="menu-text">Profile</span>
                     </a>
                 </li>
                 <li>
-                    <a href="https://loboguara.olivsec.com.br/docs/" target="_blank">
-                        <i class="material-icons">description</i>
+                    <a href="/docs" target="_blank">
+                        <i class="material-icons notranslate">description</i>
                         <span class="menu-text">Documentation</span>
                     </a>
                 </li>
                 {% if current_user.is_authenticated and (current_user.is_admin or current_user.is_superadmin) %}
                 <li>
-                    <a href="#adminSubmenu" data-toggle="collapse" aria-expanded="{% if 'admin' in request.path %}true{% else %}false{% endif %}" class="dropdown-toggle {% if 'admin' in request.path %}active{% endif %}">
-                        <i class="material-icons">admin_panel_settings</i>
+                    <a href="#adminSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                        <i class="material-icons notranslate">admin_panel_settings</i>
                         <span class="menu-text">Admin</span>
                     </a>
-                    <ul class="collapse list-unstyled {% if 'admin' in request.path %}show{% endif %}" id="adminSubmenu">
-                        <li class="{% if request.path == url_for('admin.admin_dashboard') %}active{% endif %}">
+                    <ul class="collapse list-unstyled" id="adminSubmenu">
+                        <li>
                             <a href="{{ url_for('admin.admin_dashboard') }}">
-                                <i class="material-icons">dashboard</i>
+                                <i class="material-icons notranslate">dashboard</i>
                                 <span class="menu-text">Dashboard</span>
                             </a>
                         </li>
-                        <li class="{% if request.path == url_for('admin.admin_users') %}active{% endif %}">
+                        <li>
                             <a href="{{ url_for('admin.admin_users') }}">
-                                <i class="material-icons">group</i>
+                                <i class="material-icons notranslate">group</i>
                                 <span class="menu-text">Manage Users</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('admin.admin_important_notices') }}">
+                                <i class="material-icons notranslate">announcement</i>
+                                <span class="menu-text">Important Notices</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('admin.data_leak_management') }}">
+                                <i class="material-icons notranslate">security</i>
+                                <span class="menu-text">Data Leak Management</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('admin.admin_data_leak') }}">
+                                <i class="material-icons notranslate">leak_add</i>
+                                <span class="menu-text">Data Leak Information</span>
                             </a>
                         </li>
                     </ul>
@@ -136,12 +162,13 @@
                 </li>
             </ul>
         </div>
-        
 
-        
         <div id="page-content-wrapper">
+            <div class="beta-banner">
+                <p>Beta Version</p>
+            </div>
 
-            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">  
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -154,7 +181,6 @@
                 </div>
             </nav>
 
-            
             <div class="container-fluid alert-container">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
@@ -171,9 +197,9 @@
                 {% block content %}{% endblock %}
             </div>
         </div>
-        
+
     </div>
-    
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha256-4+XzXVhsDmqanXGHaHvgh1gMQKX40OUvDEBTu8JcmNs=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha256-GLgOQLuTrl+PHTJTsD2OXVW1E0GifteM9C/q3QErz58=" crossorigin="anonymous"></script>
