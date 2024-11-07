@@ -27,7 +27,7 @@ login_manager = LoginManager()
 mail = Mail()
 csrf = CSRFProtect()
 api = Api()
-limiter = Limiter(key_func=get_remote_address)
+limiter = Limiter(key_func=get_remote_address, storage_uri="redis://localhost:6379/0")
 socketio = SocketIO()
 
 @contextmanager
@@ -71,7 +71,6 @@ def create_app():
     csrf.init_app(app)
     api.init_app(app)
     limiter.init_app(app)
-    limiter._storage_uri = "redis://localhost:6379/0"
 
     socketio.init_app(app, async_mode='eventlet')
 
@@ -165,9 +164,9 @@ def start_scheduler(app):
     from app.routes.urlmonitoring import check_monitored_urls
 
     scheduler = BackgroundScheduler()
-    
+
     scheduler.add_job(partial(check_monitored_urls, app), 'interval', minutes=1)
-    
+
     scheduler.start()
     app.logger.info('APScheduler started.')
 
@@ -185,7 +184,7 @@ def configure_logging(app):
         file_handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
         file_handler.setLevel(logging.ERROR)
         app.logger.addHandler(file_handler)
-    
+
     app.logger.setLevel(getattr(logging, app.config.get('LOG_LEVEL', 'INFO')))
     app.logger.info('Lobo Guará startup')
 
