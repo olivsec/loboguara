@@ -25,6 +25,9 @@ rsync -av --exclude "$(basename "$EXCLUDE_FILE")" "$TEMP_DIR/server/" "$INSTALL_
 echo "Changing ownership of files to 'loboguara'..."
 chown -R loboguara:loboguara "$INSTALL_DIR" || error_exit "Failed to change ownership!"
 
+echo "setting execution permission to the start.sh file..."
+sudo -u loboguara chmod +x /opt/loboguara/start.sh
+
 echo "Cleaning up temporary files..."
 rm -rf "$TEMP_DIR"
 
