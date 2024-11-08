@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "YOUR_PASSWORD_HERE"
+    volumes:
+      - ./loboguara.sql:/docker-entrypoint-initdb.d/loboguara.sql
+    ports:
+      - "5432:5432"
+  loboguara:
+    build: .
+    ports:
+      - "7405:7405"
+    depends_on:
+      - postgres

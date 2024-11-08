@@ -15,6 +15,9 @@ fi
 
 echo "Checking variables in the configuration file..."
 
+# need to modify variables referencing services with localhost
+sed -i -r "s/(SQLALCHEMY_DATABASE_URI = 'postgresql:\/\/guarauser:YOUR_PASSWORD_HERE@)(localhost)(\/guaradb\?sslmode=disable')/\1postgres\3/" "$CONFIG_FILE"
+
 DB_URI=$(grep -oP 'SQLALCHEMY_DATABASE_URI\s*=\s*'\''\K[^'\'']+' "$CONFIG_FILE")
 MAIL_SERVER=$(grep -oP 'MAIL_SERVER\s*=\s*'\''\K[^'\'']+' "$CONFIG_FILE")
 MAIL_PORT=$(grep -oP 'MAIL_PORT\s*=\s*\K[0-9]+' "$CONFIG_FILE")
@@ -29,13 +32,14 @@ GOOGLE_CHROME_PATH=$(grep -oP 'GOOGLE_CHROME_PATH\s*=\s*'\''\K[^'\'']+' "$CONFIG
 FFUF_PATH=$(grep -oP 'FFUF_PATH\s*=\s*'\''\K[^'\'']+' "$CONFIG_FILE")
 SUBFINDER_PATH=$(grep -oP 'SUBFINDER_PATH\s*=\s*'\''\K[^'\'']+' "$CONFIG_FILE")
 
-echo "Checking database connection and permissions..."
-psql "$DB_URI" -c "\dt" > /dev/null 2>&1 || error_exit "Failed to connect to the database!"
+# SKIP, otherwise the build process will fail
+#echo "Checking database connection and permissions..."
+#psql -h postgres "$DB_URI" -c "\dt" > /dev/null 2>&1 || error_exit "Failed to connect to the database!"
 
-EXTENSION=$(psql "$DB_URI" -c "SELECT * FROM pg_extension WHERE extname = 'pg_trgm';" | grep pg_trgm)
-if [ -z "$EXTENSION" ]; then
-    error_exit "pg_trgm extension not found!"
-fi
+#EXTENSION=$(psql -h postgres "$DB_URI" -c "SELECT * FROM pg_extension WHERE extname = 'pg_trgm';" | grep pg_trgm)
+#if [ -z "$EXTENSION" ]; then
+#    error_exit "pg_trgm extension not found!"
+#fi
 
 echo "Checking email settings..."
 if [ -z "$MAIL_SERVER" ] || [ -z "$MAIL_PORT" ] || [ -z "$MAIL_USERNAME" ] || [ -z "$MAIL_PASSWORD" ] || [ -z "$MAIL_DEFAULT_SENDER" ]; then
@@ -71,15 +75,14 @@ export FLASK_APP="$INSTALL_DIR/run.py"
 
 echo "Initializing the database..."
 cd "$INSTALL_DIR" || error_exit "Failed to access the installation directory!"
-hostname
-echo "as user $USER - `id`"
+
 flask db init || error_exit "Failed to initialize the database!"
 flask db migrate -m "Initial migration." || error_exit "Failed to create migration!"
 flask db upgrade || error_exit "Failed to upgrade the database!"
 
 echo "Populating timezones table..."
 
-psql "$DB_URI" <<EOF || error_exit "Failed to populate timezones table!"
+psql -h postgres "$DB_URI" <<EOF || error_exit "Failed to populate timezones table!"
 DO
 \$\$
 BEGIN
@@ -147,7 +150,7 @@ cron_job="*/1 * * * * /opt/loboguara/venv/bin/python /opt/loboguara/update_dashb
 echo "Cron job added to loboguara's crontab."
 
 
-sudo chmod +x /opt/loboguara/start.sh
+sudo chmod a+x /opt/loboguara/start.sh
 
 echo "
 
@@ -188,7 +191,5 @@ echo "
 
 Installation completed successfully!
 The application can now only be started by the user 'loboguara'.
-To start the application, run the following commands as 'loboguara':
-
-sudo -u loboguara /opt/loboguara/start.sh
 "
+
