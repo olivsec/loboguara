@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 CONFIG_FILE="server/app/config.py"
 INIT_FILE="/opt/loboguara/app/__init__.py"

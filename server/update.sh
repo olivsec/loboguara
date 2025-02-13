@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 REPO_URL="https://github.com/olivsec/loboguara.git"
 TEMP_DIR="/tmp/loboguara"
