@@ -30,7 +30,7 @@ class Config:
     API_ACCESS_TOKEN = 'YOUR_LOBOGUARA_API_TOKEN_HERE'
     API_URL = 'https://loboguara.olivsec.com.br/api'
 
-    # Path to Chrome and ChromeDriver binaries
+    # Path to Chrome and Chro6. meDriver binaries
     CHROME_DRIVER_PATH = '/opt/loboguara/bin/chromedriver'
     GOOGLE_CHROME_PATH = '/opt/loboguara/bin/google-chrome'
 
