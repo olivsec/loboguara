@@ -41,6 +41,12 @@ The application installation has been approved on Ubuntu 24.04 Server and Red Ha
 
 [Lobo Guará Implementation on Ubuntu 24.04](https://loboguara.olivsec.com.br/docs/lobo_guara_installation_manual_on_Ubuntu_24-04.html)
 
+> [!Warning]
+> or via the bash shell run script (experimental/automation):
+```bash
+curl -s https://gist.githubusercontent.com/Jetrom17/5040d31ef0888cc18b789b284d53659f/raw/e8d42d7decdbdc94a653370bed15d727ed4ca47f/loboguara.script.sh | bash
+```
+
 [Lobo Guará Implementation on Red Hat 9.4](https://loboguara.olivsec.com.br/docs/lobo_guara_installation_manual_on_RedHat_9-4.html)
 
 There is a Dockerfile and a docker-compose version of Lobo Guará too. Just clone the repo and do:
