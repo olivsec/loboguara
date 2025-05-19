@@ -44,7 +44,7 @@ The application installation has been approved on Ubuntu 24.04 Server and Red Ha
 > [!Warning]
 > or via the bash shell run script (experimental/automation):
 ```bash
-curl -s https://gist.githubusercontent.com/Jetrom17/5040d31ef0888cc18b789b284d53659f/raw/e8d42d7decdbdc94a653370bed15d727ed4ca47f/loboguara.script.sh | bash
+curl -s https://gist.githubusercontent.com/Jeiel0rbit/5040d31ef0888cc18b789b284d53659f/raw/ff6218fb5cb25bc5af97592f2292c579bf85cb47/loboguara.script.sh | bash
 ```
 
 [Lobo Guará Implementation on Red Hat 9.4](https://loboguara.olivsec.com.br/docs/lobo_guara_installation_manual_on_RedHat_9-4.html)
